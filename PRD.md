@@ -1,27 +1,30 @@
 # Product Requirements Document
-## Lead Generation Hub
+## LeadForge — B2B Lead Generation Hub
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Date:** July 21, 2026  
 **Status:** Draft  
+**Live Product:** https://lead-generation-hub--couragefred3.replit.app  
 
 ---
 
 ## 1. Executive Summary
 
-Lead Generation Hub is a B2B sales intelligence and lead management platform that helps sales teams discover, capture, score, verify, and follow up on prospects from multiple sources — including web scraping, LinkedIn, website forms, and cold outreach campaigns. It consolidates fragmented lead generation workflows into a single, mobile-friendly hub with deep integrations into industry-standard CRM and outreach tools.
+LeadForge is a B2B lead generation platform that lets sales teams find, verify, enrich, and reach prospects on autopilot. Users type a keyword — an industry, role, or company type — and LeadForge runs a 4-step async pipeline: it discovers businesses via web intelligence, scrapes contact data, verifies every email address, and enriches each profile with LinkedIn, phone, and firmographic data. Verified leads are then pushed directly into Brevo email campaigns or Twilio WhatsApp sequences with a single click — no CSV exports, no copy-paste.
+
+The product ships with a built-in demo mode using mock data so users can experience the full workflow before connecting their own API keys.
 
 ---
 
 ## 2. Problem Statement
 
-Sales teams at SMBs and B2B companies waste significant time and money juggling multiple disconnected tools to find, qualify, and act on leads. Key pain points include:
+B2B sales teams waste hours every week stitching together multiple tools to find, qualify, and contact prospects. Key pain points:
 
-- **Scattered data sources** — leads come from LinkedIn, forms, cold email, and scraped databases with no unified view
-- **Manual verification** — reps spend hours validating email addresses and contact info
-- **No intelligent scoring** — every lead looks equally valuable, leading to poor prioritisation
-- **Slow follow-up** — manual outreach delays mean warm leads go cold
-- **Poor visibility** — no single dashboard showing pipeline health, conversion rates, or source ROI
+- **Manual prospecting is slow** — reps spend 3–4 hours/day on LinkedIn and Google to build contact lists
+- **Data quality is poor** — unverified emails cause high bounce rates (industry average 15–25%), damaging sender reputation
+- **Fragmented toolchain** — discovery, verification, enrichment, and outreach all live in separate tools with no shared pipeline
+- **Delayed outreach** — manual handoffs between tools mean warm leads go cold before first contact
+- **No single dashboard** — pipeline health, verification rates, and campaign performance are scattered across platforms
 
 ---
 
@@ -29,237 +32,276 @@ Sales teams at SMBs and B2B companies waste significant time and money juggling 
 
 | Goal | Metric | Target |
 |------|--------|--------|
-| Centralise lead capture | % of leads flowing through the hub | > 80% within 30 days of onboarding |
-| Reduce time-to-contact | Average hours from lead capture to first outreach | < 2 hours |
-| Improve lead quality | % of leads that reach "qualified" status | > 40% |
-| Increase rep productivity | Leads processed per rep per week | 2× baseline |
-| Revenue | Monthly Recurring Revenue (MRR) | $10K within 6 months of launch |
+| Reduce prospecting time | Hours/week saved per rep | ≥ 12 hours (per landing page claim) |
+| Improve email accuracy | Verified email success rate | ≥ 94% |
+| Leads generated on platform | Cumulative leads through pipeline | 2.4M+ (current milestone) |
+| Customer adoption | Companies actively using LeadForge | 1,200+ (current milestone) |
+| Activation | % of signups who run at least one pipeline | > 60% within first session |
+| Revenue | Monthly Recurring Revenue | $10K MRR within 6 months of launch |
 
 ---
 
 ## 4. Target Users & Personas
 
 ### Persona 1 — Alex, the B2B Sales Rep
-- Works at a 20–200 person SaaS or services company
-- Spends 3–4 hours/day prospecting on LinkedIn and email
-- Frustrated by copy-pasting contact details across tools
-- Needs: fast lead discovery, one-click enrichment, and email sequences
+- Works at a 10–200 person SaaS or professional services company
+- Spends 3–4 hours/day manually prospecting on LinkedIn and email
+- Frustrated by copying contact details between tools
+- Needs: fast keyword-based discovery, verified contacts, one-click campaign launch
 
-### Persona 2 — Jordan, the Sales Manager / SME Owner
-- Owns a small business or leads a sales team of 2–10 reps
-- Needs visibility into pipeline health and rep activity
-- Makes buying decisions; cares about ROI and simplicity
-- Needs: analytics dashboard, team management, integrations with existing tools
+### Persona 2 — Jordan, the SME Owner / Sales Lead
+- Runs a small business or leads a team of 2–10 sales reps
+- Needs pipeline visibility and outreach performance data without hiring an ops team
+- Makes the buying decision; cares about ROI and ease of setup
+- Needs: analytics dashboard, API key vault, clear demo-to-live upgrade path
 
-### Persona 3 — Morgan, the Marketing/Growth Lead
-- Runs inbound campaigns and owns the website contact form
-- Wants leads from forms to auto-route into the sales pipeline
-- Needs: form builder, source attribution, campaign performance data
+### Persona 3 — Morgan, the Growth / Marketing Manager
+- Runs outbound campaigns and owns email deliverability
+- Wants a single platform for discovery-to-campaign without CSV handoffs
+- Needs: Brevo push integration, bounce rate monitoring, campaign performance tracking
 
 ---
 
-## 5. Features & Requirements
+## 5. Application Structure
 
-### 5.1 Lead Capture
+LeadForge is a single-page web application with four primary views accessible via a left-hand sidebar:
 
-| # | Requirement | Priority |
-|---|-------------|----------|
-| LC-1 | Embeddable web capture forms (customisable fields, branding) | P0 |
-| LC-2 | LinkedIn scraping — extract contact name, title, company, email, URL | P0 |
-| LC-3 | Web scraper — crawl target websites or directories for contact data | P0 |
-| LC-4 | Manual lead entry / CSV bulk import | P0 |
-| LC-5 | Cold outreach reply capture (email parsing) | P1 |
-| LC-6 | API endpoint for third-party lead ingestion | P1 |
+| Route | Page | Purpose |
+|-------|------|---------|
+| `/app` | Dashboard | Pipeline stats, recent activity, health metrics |
+| `/app/search` | Discovery Engine | Keyword input → launch async pipeline |
+| `/app/leads` | Lead Pipeline | Verified contacts table with filter, bulk action, campaign assignment |
+| `/app/settings` | API Key Vault | Connect Firecrawl, Hunter.io, Fullenrich, Brevo, Twilio keys |
 
-### 5.2 Lead Enrichment & Verification
+---
 
-| # | Requirement | Priority |
-|---|-------------|----------|
-| EV-1 | Email address verification via Hunter.io integration | P0 |
-| EV-2 | Contact enrichment (job title, company size, industry) via Apollo.io | P0 |
-| EV-3 | Duplicate detection and merging | P0 |
-| EV-4 | Phone number validation | P1 |
-| EV-5 | Company firmographic data (revenue range, headcount, tech stack) | P1 |
+## 6. Features & Requirements
 
-### 5.3 Lead Scoring
+### 6.1 Discovery Engine (Search)
 
 | # | Requirement | Priority |
 |---|-------------|----------|
-| LS-1 | Configurable scoring rules (job title, company size, industry, source, engagement) | P0 |
-| LS-2 | Automated score calculation on lead creation and update | P0 |
-| LS-3 | Score thresholds for automatic status transitions (cold → warm → hot) | P0 |
-| LS-4 | AI-assisted scoring based on historical conversion patterns | P2 |
+| DE-1 | Keyword search bar accepting free-text input (industry, role, location, company type) | P0 |
+| DE-2 | "Launch" triggers an async 4-step pipeline in the background | P0 |
+| DE-3 | Real-time pipeline progress indicator while job runs | P0 |
+| DE-4 | Firecrawl integration — web intelligence to discover matching businesses | P0 |
+| DE-5 | Demo mode using mock data when no API keys are configured | P0 |
+| DE-6 | Pipeline history — view past searches and their results | P1 |
+| DE-7 | Saved search templates (reusable keyword queries) | P2 |
 
-### 5.4 CRM & Pipeline Management
+### 6.2 The 4-Step Async Pipeline
 
-| # | Requirement | Priority |
-|---|-------------|----------|
-| CRM-1 | Built-in lead pipeline (Kanban and list views) with drag-and-drop stage management | P0 |
-| CRM-2 | Lead detail page — contact info, activity timeline, notes, tasks | P0 |
-| CRM-3 | Two-way HubSpot sync (contacts, deals, activities) | P0 |
-| CRM-4 | Apollo.io contact and sequence sync | P1 |
-| CRM-5 | Tag and segment leads with custom labels | P1 |
-| CRM-6 | Task and reminder management per lead | P1 |
+| Step | Action | Service | Priority |
+|------|--------|---------|----------|
+| 1 — Discover | Web crawl for matching businesses based on keyword | Firecrawl | P0 |
+| 2 — Scrape | Extract contact name, email, company, title, website from results | Firecrawl | P0 |
+| 3 — Verify | Validate every email address before adding to pipeline | Hunter.io | P0 |
+| 4 — Enrich | Append LinkedIn URL, phone, role, company size, industry | Fullenrich | P0 |
 
-### 5.5 Email Automation & Outreach
-
-| # | Requirement | Priority |
-|---|-------------|----------|
-| EM-1 | Multi-step email sequence builder (drip campaigns) | P0 |
-| EM-2 | Personalisation tokens (first name, company, role) | P0 |
-| EM-3 | Send-time optimisation | P1 |
-| EM-4 | Open, click, and reply tracking | P0 |
-| EM-5 | Brevo (formerly Sendinblue) integration for email delivery | P0 |
-| EM-6 | Unsubscribe / opt-out handling (CAN-SPAM / GDPR compliant) | P0 |
-| EM-7 | A/B testing for subject lines and email body | P2 |
-
-### 5.6 Analytics Dashboard
+### 6.3 Lead Pipeline (Leads View)
 
 | # | Requirement | Priority |
 |---|-------------|----------|
-| AN-1 | Pipeline overview — total leads, by stage, by source | P0 |
-| AN-2 | Conversion funnel (capture → qualified → contacted → closed) | P0 |
-| AN-3 | Source performance — which channels generate the most / best leads | P0 |
-| AN-4 | Email campaign metrics (open rate, click rate, reply rate, bounce rate) | P0 |
-| AN-5 | Lead score distribution over time | P1 |
-| AN-6 | Rep activity leaderboard (leads contacted, emails sent, deals closed) | P1 |
-| AN-7 | Export reports to CSV / PDF | P1 |
+| LP-1 | Tabular lead list showing: Contact, Company, Verification Status, Campaign | P0 |
+| LP-2 | Filter leads by verification status (Verified / Unverified / Bounced) | P0 |
+| LP-3 | Filter leads by campaign | P0 |
+| LP-4 | Bulk select leads for outreach action | P0 |
+| LP-5 | One-click push selected leads to a Brevo email campaign | P0 |
+| LP-6 | One-click send WhatsApp messages to leads with phone numbers via Twilio | P0 |
+| LP-7 | Lead detail view — full contact info, enrichment data, activity log | P1 |
+| LP-8 | Manual lead entry and CSV bulk import | P1 |
+| LP-9 | Tag and label leads | P1 |
+| LP-10 | Export leads to CSV | P1 |
 
-### 5.7 Integrations
-
-| Integration | Purpose | Priority |
-|-------------|---------|----------|
-| HubSpot | Bi-directional CRM sync | P0 |
-| Apollo.io | Contact enrichment + outreach sequences | P0 |
-| Hunter.io | Email finding and verification | P0 |
-| Brevo | Transactional and campaign email delivery | P0 |
-| Paystack | Payment processing for subscriptions | P0 |
-| LinkedIn (via scraper) | Lead discovery | P0 |
-| Zapier / Webhook | Custom automation triggers | P2 |
-
-### 5.8 Authentication & Team Management
+### 6.4 Email Outreach (Brevo Integration)
 
 | # | Requirement | Priority |
 |---|-------------|----------|
-| TM-1 | User registration and login (email + password, Google SSO) | P0 |
-| TM-2 | Organisation / workspace with multiple seats | P0 |
-| TM-3 | Role-based access control (Admin, Manager, Rep) | P1 |
-| TM-4 | API key management per workspace | P1 |
+| EM-1 | Push verified leads directly into an existing Brevo campaign | P0 |
+| EM-2 | Create a new Brevo campaign from within LeadForge | P1 |
+| EM-3 | Track open rate, click rate, and reply rate per campaign | P1 |
+| EM-4 | Bounce rate monitoring and automatic lead status update | P0 |
+| EM-5 | Unsubscribe / opt-out handling (CAN-SPAM / GDPR compliant) | P0 |
+| EM-6 | Personalisation tokens (first name, company, role) | P1 |
 
-### 5.9 Mobile Experience
+### 6.5 WhatsApp Outreach (Twilio Integration)
+
+| # | Requirement | Priority |
+|---|-------------|----------|
+| WA-1 | Send personalised WhatsApp messages to leads that have a phone number | P0 |
+| WA-2 | Message template editor with personalisation tokens | P0 |
+| WA-3 | Delivery status tracking (sent / delivered / read / failed) | P1 |
+| WA-4 | Opt-out handling for WhatsApp messages | P0 |
+
+### 6.6 Analytics Dashboard
+
+| # | Requirement | Priority |
+|---|-------------|----------|
+| AN-1 | Total leads in pipeline, by verification status | P0 |
+| AN-2 | Pipeline success rate (discovered → verified → enriched) | P0 |
+| AN-3 | Email campaign performance (open, click, bounce, reply rates) | P0 |
+| AN-4 | WhatsApp outreach performance (sent, delivered, read) | P1 |
+| AN-5 | Time saved estimate (vs manual research baseline) | P1 |
+| AN-6 | Historical pipeline runs and their outcomes | P1 |
+| AN-7 | Export dashboard report to CSV / PDF | P2 |
+
+### 6.7 Settings — API Key Vault
+
+| # | Requirement | Priority |
+|---|-------------|----------|
+| SK-1 | Secure vault to store and manage user-provided API keys | P0 |
+| SK-2 | Keys: Firecrawl, Hunter.io, Fullenrich, Brevo, Twilio | P0 |
+| SK-3 | Per-key connection test (validate key is active before saving) | P1 |
+| SK-4 | Clear indicator: Demo mode (no keys) vs Live mode (keys connected) | P0 |
+| SK-5 | Keys encrypted at rest; never exposed in UI after save | P0 |
+
+### 6.8 Authentication & Accounts
+
+| # | Requirement | Priority |
+|---|-------------|----------|
+| AU-1 | Email + password registration and login | P0 |
+| AU-2 | Google OAuth sign-in | P1 |
+| AU-3 | Password reset via email | P0 |
+| AU-4 | Account settings (name, email, password change) | P1 |
+| AU-5 | Team / organisation support with multiple seats | P2 |
+
+### 6.9 Mobile Experience
 
 | # | Requirement | Priority |
 |---|-------------|----------|
 | MOB-1 | Fully responsive web app (works on iOS and Android browsers) | P0 |
-| MOB-2 | Mobile-optimised lead detail and pipeline views | P0 |
-| MOB-3 | Push notifications for hot lead alerts and task reminders | P2 |
+| MOB-2 | Mobile-optimised sidebar navigation | P0 |
+| MOB-3 | Touch-friendly lead table with horizontal scroll | P0 |
 
 ---
 
-## 6. User Flows
+## 7. Integrations
 
-### Flow 1 — Web Scrape & Capture
-1. Rep enters a target domain or LinkedIn search URL
-2. Scraper extracts contact list (name, email, title, company)
-3. System auto-verifies emails via Hunter.io
-4. Verified leads are enriched via Apollo.io
-5. Leads are scored and added to the pipeline
-
-### Flow 2 — Inbound Form Lead
-1. Visitor fills in a form on the rep's website (embedded hub form)
-2. Lead is created instantly in the hub
-3. Score is calculated based on company and role data
-4. Automated email sequence is triggered
-5. Rep is notified if score exceeds "warm" threshold
-
-### Flow 3 — Outreach Campaign
-1. Rep creates a segment of leads (e.g. score > 60, industry = SaaS)
-2. Rep builds a 3-step email sequence with personalisation tokens
-3. Sequence launches and tracks opens, clicks, replies
-4. Replies are parsed and lead status updated automatically
-5. Hot leads surface in the rep's priority queue
-
-### Flow 4 — CRM Sync
-1. Rep qualifies a lead in the hub
-2. Contact and deal are pushed to HubSpot automatically
-3. HubSpot deal stage changes sync back to the hub pipeline
-4. Activity log stays consistent across both systems
+| Integration | Role | How it's used | Priority |
+|-------------|------|---------------|----------|
+| **Firecrawl** | Web discovery & scraping | Crawls the web for businesses matching the keyword; extracts contact data | P0 |
+| **Hunter.io** | Email verification | Validates every scraped email before it enters the pipeline | P0 |
+| **Fullenrich** | Contact enrichment | Appends LinkedIn URL, phone, role, company size, and industry | P0 |
+| **Brevo** | Email outreach | Receives verified lead lists; delivers email campaigns | P0 |
+| **Twilio** | WhatsApp outreach | Sends personalised WhatsApp messages to leads with phone numbers | P0 |
+| **Paystack** | Payment & subscriptions | Handles plan billing and subscription management | P0 |
 
 ---
 
-## 7. Technical Requirements
+## 8. User Flows
+
+### Flow 1 — Keyword to Pipeline (Core Flow)
+1. User navigates to **Search → Discovery Engine**
+2. Types a keyword (e.g. "VP Engineering Fintech San Francisco")
+3. Clicks **Launch**
+4. Async pipeline runs in background: Discover → Scrape → Verify → Enrich
+5. Results appear in the **Leads** view as verified, enriched contacts
+6. User filters by verification status and selects target leads
+7. Clicks "Push to Brevo" or "Send WhatsApp" to launch outreach
+
+### Flow 2 — Demo to Live Upgrade
+1. New user signs up — app runs in demo mode with mock data
+2. User explores the full pipeline experience using sample leads
+3. User navigates to **Settings** and enters their API keys
+4. System validates each key and switches to live mode
+5. First real pipeline run uses actual Firecrawl + Hunter.io + Fullenrich data
+
+### Flow 3 — Email Campaign Launch
+1. User selects verified leads in the pipeline table
+2. Clicks "Push to Brevo campaign"
+3. Selects an existing Brevo campaign or creates a new one
+4. Leads are added to the campaign contact list
+5. Email is sent via Brevo; open/click/bounce data flows back into LeadForge
+
+### Flow 4 — WhatsApp Outreach
+1. User filters leads to those with a phone number
+2. Selects leads and clicks "Send WhatsApp"
+3. Selects or writes a message template with personalisation tokens
+4. Messages are sent via Twilio; delivery status is tracked in the pipeline
+
+---
+
+## 9. Technical Requirements
 
 | Area | Requirement |
 |------|-------------|
-| **Platform** | Web application (responsive, mobile-first) |
-| **Backend** | Node.js / Express API, PostgreSQL database |
+| **Platform** | Web application — responsive, mobile-first |
 | **Frontend** | React + Vite |
-| **Scraping** | Headless browser (Playwright or Puppeteer) with proxy rotation |
-| **Email delivery** | Brevo SMTP / API |
+| **Backend** | Node.js / Express, PostgreSQL, Drizzle ORM |
+| **Async pipeline** | Background job queue for multi-step scrape/verify/enrich operations |
 | **Payments** | Paystack Subscriptions API |
-| **Auth** | JWT sessions; Google OAuth optional |
+| **Email delivery** | Brevo API |
+| **WhatsApp** | Twilio WhatsApp Business API |
+| **Web discovery** | Firecrawl API |
+| **Email verification** | Hunter.io API |
+| **Data enrichment** | Fullenrich API |
+| **Security** | API keys encrypted at rest; HTTPS; rate limiting; secrets vault |
 | **Data privacy** | GDPR and CAN-SPAM compliant opt-out and data deletion |
 | **Uptime** | 99.5% monthly |
 | **Performance** | Dashboard load < 2s on 4G mobile |
-| **Security** | HTTPS, rate limiting, input sanitisation, secrets vault |
 
 ---
 
-## 8. Monetisation
+## 10. Monetisation
 
-| Plan | Price | Limits | Features |
-|------|-------|--------|----------|
-| **Starter** | $49/mo | 1 seat, 500 leads/mo | Capture, scoring, basic email |
-| **Growth** | $149/mo | 3 seats, 2,500 leads/mo | + Integrations, sequences, analytics |
-| **Pro** | $399/mo | 10 seats, unlimited leads | + AI scoring, A/B testing, priority support |
+| Plan | Price | Leads/mo | Features |
+|------|-------|----------|----------|
+| **Starter** | $49/mo | 500 | Discovery, verification, Brevo push |
+| **Growth** | $149/mo | 2,500 | + Fullenrich enrichment, WhatsApp, analytics |
+| **Pro** | $399/mo | Unlimited | + Saved searches, export, priority support |
 | **Enterprise** | Custom | Unlimited | + Custom integrations, SLA, dedicated CSM |
 
-Payment processed via **Paystack Subscriptions**. Annual billing available at 20% discount.
+- **Demo mode** available to all signups with no credit card required — uses mock data
+- Payment processed via **Paystack Subscriptions**
+- Annual billing available at 20% discount
 
 ---
 
-## 9. Out of Scope (v1.0)
+## 11. Out of Scope (v1.0)
 
-- Native iOS / Android apps (mobile web only)
-- Salesforce integration (v2 roadmap)
+- Native iOS / Android apps (responsive mobile web only)
+- HubSpot / Salesforce CRM sync (v2 roadmap)
+- LinkedIn direct scraping (Firecrawl web intelligence covers discovery)
 - AI-generated email copy (v2 roadmap)
-- Social media (Twitter/X, Facebook) scraping
-- Predictive deal forecasting
+- Multi-seat team workspaces (v2 roadmap)
+- Predictive lead scoring with ML (v2 roadmap)
 
 ---
 
-## 10. Risks & Mitigations
+## 12. Risks & Mitigations
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|-----------|--------|------------|
-| LinkedIn scraping gets blocked | High | High | Use rotating proxies, throttle requests, offer manual import fallback |
-| Email deliverability issues | Medium | High | Use Brevo with domain authentication (SPF/DKIM), monitor bounce rates |
-| GDPR non-compliance fines | Low | Very High | Unsubscribe flow, data deletion API, privacy policy on all forms |
-| HubSpot API rate limits | Medium | Medium | Queue sync jobs, implement exponential backoff |
-| Low conversion from free trial | Medium | High | Onboarding wizard, sample leads, in-app tooltips |
+| Firecrawl blocks or rate-limits crawls | Medium | High | Implement retry with backoff; surface clear error in UI |
+| Hunter.io false negatives (valid emails marked invalid) | Low | Medium | Allow manual override of verification status |
+| Twilio WhatsApp policy violations | Medium | High | Enforce opt-in confirmation and opt-out handling |
+| Brevo API rate limits | Medium | Medium | Queue push jobs; process in batches |
+| GDPR non-compliance | Low | Very High | Opt-out flow, data deletion endpoint, privacy policy on all outreach |
+| Poor demo-to-paid conversion | Medium | High | In-app prompt when user exhausts mock leads; highlight live mode benefits |
 
 ---
 
-## 11. Milestones
+## 13. Milestones
 
 | Milestone | Deliverables | Target |
 |-----------|-------------|--------|
 | **M1 — Foundation** | Auth, DB schema, API scaffold, CI/CD | Week 2 |
-| **M2 — Core Capture** | Form builder, CSV import, manual entry, lead list | Week 4 |
-| **M3 — Enrichment** | Hunter.io + Apollo.io integration, email verification, scoring | Week 6 |
-| **M4 — Outreach** | Email sequence builder, Brevo integration, tracking | Week 8 |
-| **M5 — CRM & Sync** | Pipeline view, HubSpot sync, task management | Week 10 |
-| **M6 — Analytics** | Dashboard, funnel, source performance reports | Week 12 |
-| **M7 — Scraping** | LinkedIn + web scraper with proxy support | Week 14 |
-| **M8 — Monetisation** | PayPal subscriptions, plan enforcement, billing portal | Week 16 |
-| **M9 — Beta Launch** | QA, mobile polish, onboarding flow, public beta | Week 18 |
+| **M2 — Discovery Engine** | Keyword search UI, Firecrawl integration, async pipeline | Week 4 |
+| **M3 — Verify & Enrich** | Hunter.io email verification, Fullenrich enrichment, demo mode | Week 6 |
+| **M4 — Lead Pipeline** | Leads table, filters, lead detail view, CSV export | Week 8 |
+| **M5 — Email Outreach** | Brevo push integration, campaign selection, tracking | Week 10 |
+| **M6 — WhatsApp Outreach** | Twilio integration, message templates, delivery tracking | Week 12 |
+| **M7 — Analytics** | Dashboard metrics, pipeline history, campaign performance | Week 13 |
+| **M8 — Settings Vault** | API key management, connection testing, demo/live toggle | Week 14 |
+| **M9 — Monetisation** | Paystack subscriptions, plan enforcement, billing portal | Week 16 |
+| **M10 — Launch** | QA, mobile polish, onboarding flow, public launch | Week 18 |
 
 ---
 
-## 12. Open Questions
+## 14. Open Questions
 
-1. Will the LinkedIn scraper use a headless browser or a third-party data provider (e.g. PhantomBuster) to reduce legal risk?
-2. Should the email sequence builder support plain-text only, or also HTML templates?
-3. Is there a desired trial period (e.g. 14-day free trial) before PayPal billing kicks in?
-4. Are there specific regions / languages to support at launch (English only for v1)?
-5. Should team seats include shared lead pools or separate pipelines per rep?
+1. Should the async pipeline run server-side (background worker) or client-side (polling)?
+2. Is there a desired lead volume cap per pipeline run, or is it purely plan-based?
+3. Should WhatsApp outreach require pre-approved message templates (Twilio requirement)?
+4. Is there a free trial period (e.g. 14 days) before Paystack billing kicks in?
+5. Should the Settings vault support multiple API key profiles (e.g. different Brevo accounts per campaign)?
