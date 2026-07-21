@@ -133,7 +133,7 @@ Sales teams at SMBs and B2B companies waste significant time and money juggling 
 | Apollo.io | Contact enrichment + outreach sequences | P0 |
 | Hunter.io | Email finding and verification | P0 |
 | Brevo | Transactional and campaign email delivery | P0 |
-| PayPal | Payment processing for subscriptions | P0 |
+| Paystack | Payment processing for subscriptions | P0 |
 | LinkedIn (via scraper) | Lead discovery | P0 |
 | Zapier / Webhook | Custom automation triggers | P2 |
 
@@ -196,7 +196,7 @@ Sales teams at SMBs and B2B companies waste significant time and money juggling 
 | **Frontend** | React + Vite |
 | **Scraping** | Headless browser (Playwright or Puppeteer) with proxy rotation |
 | **Email delivery** | Brevo SMTP / API |
-| **Payments** | PayPal Subscriptions API |
+| **Payments** | Paystack Subscriptions API |
 | **Auth** | JWT sessions; Google OAuth optional |
 | **Data privacy** | GDPR and CAN-SPAM compliant opt-out and data deletion |
 | **Uptime** | 99.5% monthly |
@@ -214,7 +214,7 @@ Sales teams at SMBs and B2B companies waste significant time and money juggling 
 | **Pro** | $399/mo | 10 seats, unlimited leads | + AI scoring, A/B testing, priority support |
 | **Enterprise** | Custom | Unlimited | + Custom integrations, SLA, dedicated CSM |
 
-Payment processed via **PayPal Subscriptions**. Annual billing available at 20% discount.
+Payment processed via **Paystack Subscriptions**. Annual billing available at 20% discount.
 
 ---
 
